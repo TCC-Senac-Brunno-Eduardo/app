@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, StatusBar } from 'react-native';
+import React from 'react';
+import { ThemeProvider } from 'react-native-elements';
 import Main from './src/pages/Main'
 
 export default function App() {
 
+  const theme = {
+    colors: {
+      primary: 'black',
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" backgroundColor="#00D6AD" />
-      <Main />
-    </View>
+    <>
+      <ThemeProvider theme={theme}>
+        <Main />
+      </ThemeProvider>
+    </>
   );
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }
-});
 

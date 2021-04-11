@@ -1,24 +1,18 @@
 import React from 'react';
-import { StyleSheet, Button } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
+import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 export default function ButtonReport() {
   return (
-    <Button title="Reportar" accessibilityLabel="Reportar" onPress={console.log('Reportar')}>Reportar</Button>
+    <Button
+      title=""
+      icon={
+        <MaterialCommunityIcons name="alert" size={32} color="white" type="solid" titleProps={{accessibilityHint: 'Reportar', accessibilityLabel:"Reportar", accessible:"true" }}/>
+      }
+      onPress={(e) => console.log('Reportar')}
+      buttonStyle={{width: '100%', height: '100%', padding: 8, borderRadius: 100}}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
-  }
-});

@@ -1,28 +1,39 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, SafeAreaView } from 'react-native';
 
 import Map from '../../components/Map'
+import ButtonReport from '../../components/ButtonReport' 
+import StatusBar from '../../components/StatusBar' 
 
 export default function Main() {
   return (
-    <View>
-      <Map />
-    </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <StatusBar />
+        <Map />
+        <View style={styles.buttonContainer}>
+          <ButtonReport style={styles.buttonReport} />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#000000',
+    paddingTop: 20,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    position: 'relative'
   },
-  map: {
+  buttonContainer: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0
-  }
+    bottom: 40,
+    right: 20,
+    width: 60,
+    height: 60
+  },
 });

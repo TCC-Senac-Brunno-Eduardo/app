@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-import ButtonReport from '../ButtonReport' 
-
-var width = Dimensions.get('window').width; //full width
-var height = Dimensions.get('window').height; //full height
+import ReportMarker from '../ReportMarker';
 
 export default function Map() {
 
@@ -33,8 +29,7 @@ export default function Map() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" backgroundColor="#00D6AD" />
+    <>
       <MapView
         showsMyLocationButton={true}
         style={styles.map}
@@ -57,36 +52,30 @@ export default function Map() {
       >
         {
           markers.length ? markers.map((marker, index) => (
-            <Marker
-              key={index}
-              title="title"
+            <ReportMarker 
               coordinate={{
-                latitude: marker.latitude + 0.005,
-                longitude: marker.longitude + 0.005,
+                latitude: marker.latitude,
+                longitude: marker.longitude
               }}
-              onPress={(e) => { e.stopPropagation(); console.log(index) }}
+              title="x" 
+              key={index} 
             />
           )) : null
         }
       </MapView>
-      <ButtonReport />
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   map: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
+    width: '100%',
+    height: '100%'
   }
 });
 
