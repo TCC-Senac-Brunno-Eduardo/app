@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 

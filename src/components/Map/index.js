@@ -26,6 +26,7 @@ export default function Map() {
         setMarkers([coords]);
       }
     })();
+    console.log('useEffect -> Map')
   }, []);
 
   return (
@@ -38,8 +39,8 @@ export default function Map() {
         initialRegion={{
           latitude: -11.0845284,
           longitude: -48.4930971,
-          latitudeDelta: 1,
-          longitudeDelta: 1,
+          latitudeDelta: 100,
+          longitudeDelta: 100,
         }}
         region={{
           latitude: location.latitude,

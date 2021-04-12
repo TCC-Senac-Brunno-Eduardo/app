@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View, SafeAreaView } from 'react-native';
 
 import Map from '../../components/Map'
 import ButtonReport from '../../components/ButtonReport' 
 import StatusBar from '../../components/StatusBar' 
 
+import { SocketContext } from '../../services/websocket';
+
 export default function Main() {
+
+  const { socket } = useContext(SocketContext);
+
+  console.log('in Main: socket.id', socket.id);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
