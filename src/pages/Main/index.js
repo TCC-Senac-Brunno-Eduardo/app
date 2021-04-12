@@ -11,8 +11,10 @@ export default function Main() {
 
   const { socket } = useContext(SocketContext);
 
-  console.log('in Main: socket.id', socket.id);
+  if(!socket?.id) return null
 
+  console.log(socket.id)
+  
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>

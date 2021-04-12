@@ -11,11 +11,14 @@ export default function App() {
     }
   }
 
+  const [socketConnection, setSocketConnection] = useState();
+
   useEffect(() => {
     console.log('useEffect => App')
 
     socket.on("connect", () => {
-      console.log('Id Socket:', socket.id);
+      console.log('connected =>', socket.id)
+      setSocketConnection(socket);
     });
 
     socket.on("connect_error", (error) => {
@@ -25,7 +28,9 @@ export default function App() {
 
   return (
     <>
-      <SocketContext.Provider value={{socket: socket}}>
+      <SocketContext.Provider value={{
+        socket: socketConnection
+      }}>
         <ThemeProvider theme={theme}>
           <Main />
         </ThemeProvider>
