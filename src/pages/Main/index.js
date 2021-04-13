@@ -4,12 +4,15 @@ import { StyleSheet, View, SafeAreaView } from 'react-native';
 import Map from '../../components/Map'
 import ButtonReport from '../../components/ButtonReport' 
 import StatusBar from '../../components/StatusBar' 
+import FormReport from '../../components/FormReport' 
 
 import { SocketContext } from '../../services/websocket';
 
 export default function Main() {
 
   const { socket } = useContext(SocketContext);
+
+  const showForm = true
 
   if(!socket?.id) return null
 
@@ -21,8 +24,11 @@ export default function Main() {
         <StatusBar />
         <Map />
         <View style={styles.buttonContainer}>
-          <ButtonReport style={styles.buttonReport} />
+          <ButtonReport/>
         </View>
+        {showForm ? 
+          <FormReport />
+        : null}
       </View>
     </SafeAreaView>
   );

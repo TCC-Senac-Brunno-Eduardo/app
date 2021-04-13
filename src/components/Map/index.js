@@ -36,6 +36,8 @@ export default function Map() {
         style={styles.map}
         loadingEnabled={true}
         provider={PROVIDER_GOOGLE}
+        userInterfaceStyle='dark'
+        showsUserLocation={true}
         initialRegion={{
           latitude: -11.0845284,
           longitude: -48.4930971,
@@ -48,18 +50,15 @@ export default function Map() {
           latitudeDelta: 0.01,
           longitudeDelta: 0,
         }}
-        userInterfaceStyle='dark'
-        showsUserLocation={true}
       >
         {
           markers.length ? markers.map((marker, index) => (
             <ReportMarker 
+              key={index} 
               coordinate={{
                 latitude: marker.latitude,
                 longitude: marker.longitude
               }}
-              title="x" 
-              key={index} 
             />
           )) : null
         }
