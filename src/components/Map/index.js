@@ -7,7 +7,7 @@ import ReportMarker from '../ReportMarker';
 
 export default function Map() {
 
-  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });  
   const [markers, setMarkers] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -32,7 +32,6 @@ export default function Map() {
   return (
     <>
       <MapView
-        showsMyLocationButton={true}
         style={styles.map}
         loadingEnabled={true}
         provider={PROVIDER_GOOGLE}
