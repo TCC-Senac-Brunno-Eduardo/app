@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'react-native-elements';
-import { socket, SocketContext } from './src/services/websocket'
+import FormReportProvider from './src/contexts/FormReportContext';
+import WebsocketProvider from './src/contexts/WebsocketContext';
 import Main from './src/pages/Main'
 
 export default function App() {
@@ -11,30 +12,19 @@ export default function App() {
     }
   }
 
-  const [socketConnection, setSocketConnection] = useState();
-
   useEffect(() => {
     console.log('useEffect => App')
-
-    socket.on("connect", () => {
-      console.log('connected =>', socket.id)
-      setSocketConnection(socket);
-    });
-
-    socket.on("connect_error", (error) => {
-      console.log(error);
-    });
   }, [])
 
   return (
     <>
-      <SocketContext.Provider value={{
-        socket: socketConnection
-      }}>
-        <ThemeProvider theme={theme}>
-          <Main />
-        </ThemeProvider>
-      </SocketContext.Provider>
+      <WebsocketProvider>
+        <FormReportProvider>
+          <ThemeProvider theme={theme}>
+            <Main />
+          </ThemeProvider>
+        </FormReportProvider>
+      </WebsocketProvider>
     </>
   );
 }

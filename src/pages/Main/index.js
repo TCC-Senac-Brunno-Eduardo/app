@@ -6,15 +6,13 @@ import ButtonReport from '../../components/ButtonReport'
 import StatusBar from '../../components/StatusBar' 
 import FormReport from '../../components/FormReport' 
 
-import { SocketContext } from '../../services/websocket';
+import { WebsocketContext } from '../../contexts/WebsocketContext';
 
 export default function Main() {
 
-  const { socket } = useContext(SocketContext);
+  const { socket } = useContext(WebsocketContext);
 
-  const showFormReport = false;
-
-  if(!socket?.id) return null
+  if(!socket?.id) return null;
 
   console.log(socket.id)
   
@@ -24,7 +22,7 @@ export default function Main() {
         <StatusBar />
         <Map />
         <ButtonReport/>
-        {showFormReport ?  <FormReport /> : null}
+        <FormReport />
       </Container>
     </SafeArea>
   );

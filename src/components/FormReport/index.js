@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Button, Text, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { FormReportContext } from '../../contexts/FormReportContext';
 
 import {
   SafeArea, 
@@ -18,6 +20,11 @@ import {
 } from './styles';
 
 export default function FormReport() {
+
+  const { show, setShow } = useContext(FormReportContext);
+
+  if(!show) return null;
+
   return (
     <SafeArea>
       <Container>
@@ -77,7 +84,7 @@ export default function FormReport() {
         </ContainerAddress>
 
         <ContainerButtons>
-          <Button color={'#FF0000'} accessibilityLabel="Cancelar" title="Cancelar" onPress={(e) => console.log('Cancelar')} />
+          <Button color={'#FF0000'} accessibilityLabel="Cancelar" title="Cancelar" onPress={(e) => setShow(!show)} />
           <Button color={'#00a830'} accessibilityLabel="Reportar" title="Reportar" onPress={(e) => console.log('Reportar')} />
         </ContainerButtons>
 
