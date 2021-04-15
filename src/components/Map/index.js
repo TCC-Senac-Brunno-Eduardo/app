@@ -1,33 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import ReportMarker from '../ReportMarker';
 
+import { WebsocketContext } from '../../contexts/WebsocketContext';
+
 export default function Map() {
 
-  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });  
+  const { socket } = useContext(WebsocketContext);
+
+  const [location, setLocation] = useState();  
+  const [coords, setCoords] = useState();  
   const [markers, setMarkers] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const initialRegion = {
+    latitude: -11.0845284,
+    longitude: -48.4930971
+  }
+
+  console.log(socket.id)
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+        setErrorMsg('O aplicativo não teve acesso ao GPS.');
         return;
       }
-
+      
       let gpsServiceStatus = await Location.hasServicesEnabledAsync();
       if (gpsServiceStatus) {
         const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
-        setLocation(coords);
-        setMarkers([coords]);
+        setCoords(coords);
+        console.log('useEffect -> Permisão de GPS + Coordenadas', coords)
       }
     })();
-    console.log('useEffect -> Map')
   }, []);
+
+  useEffect(() => {
+    if(coords) {
+      console.log('Com as coordenadas, vou buscar no servidor a localização completa')
+      socket.emit("userLocation", coords);
+    }
+  }, [coords]);
+
+  useEffect(() => {
+    if(location) {
+      console.log('Com a localização completa, vou buscar os marcadores da cidade', location.city)
+      socket.emit('cityMarkers', location.city);
+      socket.on(location.city, (data) => {
+        setMarkers(data)
+      });
+    }
+  }, [location]);
+
+  useEffect(() => {
+    socket.on('userAddress', (data) => {
+      setLocation(data)
+    })
+  }, []);
+
+  if(errorMsg) return (
+    <View>
+        <Text>{errorMsg}</Text>
+    </View>
+  );
 
   return (
     <>
@@ -44,8 +84,8 @@ export default function Map() {
           longitudeDelta: 100,
         }}
         region={{
-          latitude: location.latitude,
-          longitude: location.longitude,
+          latitude: coords ? coords.latitude : initialRegion.latitude,
+          longitude: coords ? coords.longitude : initialRegion.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0,
         }}
