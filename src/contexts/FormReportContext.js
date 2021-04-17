@@ -4,10 +4,10 @@ export const FormReportContext = createContext();
 
 export default function FormReportProvider({children}) {
 
-  const [show, setShow] = useState(false) 
+  const [showForm, setShowForm] = useState(false) 
   
   return (
-    <FormReportContext.Provider value={{show, setShow}}>
+    <FormReportContext.Provider value={{showForm, setShowForm}}>
       {children}
     </FormReportContext.Provider>
   );

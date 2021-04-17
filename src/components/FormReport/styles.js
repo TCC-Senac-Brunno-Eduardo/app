@@ -25,8 +25,6 @@ export const ContainerForm = styled.View`
 `;
 
 export const InputGroup = styled.View`
-  border-bottom-width: 1px;
-  border-color:  #000;
   border-radius: 5px;
   margin-bottom: 16px;
 `;
@@ -34,10 +32,19 @@ export const InputGroup = styled.View`
 export const TitleInput = styled.TextInput`
   padding: 8px;
   min-height: 40px;
+  border-bottom-width: 1px;
+  border-color:  ${props => (!props.errorStyle ? '#000' : 'red')};
 `;
 
 export const DescriptionInput = styled.TextInput`
   padding: 8px;
+  border-bottom-width: 1px;
+  border-color:  ${props => (!props.errorStyle ? '#000' : 'red')};
+`;
+
+export const InputErrorMessage = styled.Text`
+  color: red;
+  margin-top: 5px;
 `;
 
 export const ContainerAddress = styled.View`

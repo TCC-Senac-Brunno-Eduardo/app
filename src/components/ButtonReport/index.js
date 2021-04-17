@@ -8,7 +8,7 @@ import { FormReportContext } from '../../contexts/FormReportContext';
 
 export default function ButtonReport() {
 
-  const { show, setShow } = useContext(FormReportContext);
+  const { setShowForm } = useContext(FormReportContext);
 
   return (
     <Container>
@@ -16,7 +16,7 @@ export default function ButtonReport() {
         icon={
           <MaterialCommunityIcons name="alert" size={32} color="white" type="solid" titleProps={{accessibilityHint: 'Reportar', accessibilityLabel:"Reportar", accessible:"true" }}/>
         }
-        onPress={(e) => setShow(!show)}
+        onPress={(e) => setShowForm(true)}
         buttonStyle={{width: '100%', height: '100%', padding: 8, borderRadius: 100}}
       />
     </Container>

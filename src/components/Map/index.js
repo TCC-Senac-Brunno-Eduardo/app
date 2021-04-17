@@ -4,24 +4,37 @@ import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import ReportMarker from '../ReportMarker';
+import DraggableMarker from '../DraggableMarker';
 
+import { FormReportContext } from '../../contexts/FormReportContext';
+import { MapContext } from '../../contexts/MapContext';
 import { WebsocketContext } from '../../contexts/WebsocketContext';
 
 export default function Map() {
 
   const { socket } = useContext(WebsocketContext);
+  const { location, setLocation, coords, setCoords, showDraggableMarker, setDraggableMarkerCoords } = useContext(MapContext);
+  const { showForm } = useContext(FormReportContext);
 
-  const [location, setLocation] = useState();  
-  const [coords, setCoords] = useState();  
+  const [ currentUserCoords, setCurrentUserCoords ] = useState();
+  
+  const [firstTime, setFirstTime] = useState(true);
   const [markers, setMarkers] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
 
   const initialRegion = {
     latitude: -11.0845284,
-    longitude: -48.4930971
+    longitude: -48.4930971,
+    latitudeDelta: 100,
+    longitudeDelta: 100,
   }
 
-  console.log(socket.id)
+  handleRegionChangeComplete = (newCoords) => {
+    if(showDraggableMarker){
+      setDraggableMarkerCoords(newCoords);
+    }
+    setCoords(newCoords);
+  }
 
   useEffect(() => {
     (async () => {
@@ -32,30 +45,23 @@ export default function Map() {
       }
       
       let gpsServiceStatus = await Location.hasServicesEnabledAsync();
+      console.log('gpsServiceStatus', gpsServiceStatus)
       if (gpsServiceStatus) {
         const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
-        setCoords(coords);
-        console.log('useEffect -> Permisão de GPS + Coordenadas', coords)
+        setCurrentUserCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
+        setCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
+        console.log('STEP 1 -> Permisão de GPS + Coordenadas')
       }
     })();
   }, []);
 
   useEffect(() => {
-    if(coords) {
-      console.log('Com as coordenadas, vou buscar no servidor a localização completa')
+    if(coords && firstTime) {
+      console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
       socket.emit("userLocation", coords);
+      setFirstTime(false);
     }
   }, [coords]);
-
-  useEffect(() => {
-    if(location) {
-      console.log('Com a localização completa, vou buscar os marcadores da cidade', location.city)
-      socket.emit('cityMarkers', location.city);
-      socket.on(location.city, (data) => {
-        setMarkers(data)
-      });
-    }
-  }, [location]);
 
   useEffect(() => {
     socket.on('userAddress', (data) => {
@@ -63,6 +69,32 @@ export default function Map() {
     })
   }, []);
 
+  useEffect(() => {
+    if(location) {
+      console.log('STEP 3 -> Com a localização completa, vou buscar os marcadores da cidade', location.city)
+      socket.emit('cityMarkers', location.city);
+      socket.on(location.city, (data) => {
+       setMarkers(data)
+      });
+    }
+  }, [location]);
+
+  useEffect(() => {
+    if(location) {
+      console.log('STEP 3 -> Com a localização completa, vou buscar os marcadores da cidade', location.city)
+      socket.emit('cityMarkers', location.city);
+      socket.on(location.city, (data) => {
+       setMarkers(data)
+      });
+    }
+  }, []);
+  
+  useEffect(() => {
+    if(!showForm) {
+      setCoords(currentUserCoords)
+    }
+  }, [showForm]);
+  
   if(errorMsg) return (
     <View>
         <Text>{errorMsg}</Text>
@@ -77,21 +109,12 @@ export default function Map() {
         provider={PROVIDER_GOOGLE}
         userInterfaceStyle='dark'
         showsUserLocation={true}
-        initialRegion={{
-          latitude: -11.0845284,
-          longitude: -48.4930971,
-          latitudeDelta: 100,
-          longitudeDelta: 100,
-        }}
-        region={{
-          latitude: coords ? coords.latitude : initialRegion.latitude,
-          longitude: coords ? coords.longitude : initialRegion.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0,
-        }}
+        onRegionChangeComplete={handleRegionChangeComplete}
+        initialRegion={initialRegion}
+        region={coords || initialRegion}
       >
         {
-          markers.length ? markers.map((marker, index) => (
+          markers.length && !showDraggableMarker ? markers.map((marker, index) => (
             <ReportMarker 
               key={index} 
               coordinate={{
@@ -102,6 +125,7 @@ export default function Map() {
           )) : null
         }
       </MapView>
+      { showDraggableMarker ? <DraggableMarker/> : null }
     </>
   );
 }

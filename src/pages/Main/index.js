@@ -7,21 +7,21 @@ import StatusBar from '../../components/StatusBar'
 import FormReport from '../../components/FormReport' 
 
 import { WebsocketContext } from '../../contexts/WebsocketContext';
+import { MapContext } from '../../contexts/MapContext';
 
 export default function Main() {
 
   const { socket } = useContext(WebsocketContext);
+  const { showDraggableMarker } = useContext(MapContext);
 
   if(!socket?.id) return null;
 
-  console.log(socket.id)
-  
   return (
     <SafeArea>
       <Container>
         <StatusBar />
         <Map />
-        <ButtonReport/>
+        {!showDraggableMarker ? <ButtonReport/> : null}
         <FormReport />
       </Container>
     </SafeArea>

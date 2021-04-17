@@ -1,5 +1,5 @@
 import React from 'react';
-import  { Marker, Callout } from 'react-native-maps';
+import  { Marker } from 'react-native-maps';
 
 
 export default function ReportMarker(props) {
