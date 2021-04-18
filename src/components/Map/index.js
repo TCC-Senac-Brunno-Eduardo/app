@@ -47,10 +47,10 @@ export default function Map() {
       let gpsServiceStatus = await Location.hasServicesEnabledAsync();
       if (gpsServiceStatus) {
         console.log('STEP 1 -> Permisão de GPS + Coordenadas')
-        const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
+        let currentPosition = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
         setFirstTime(true);
-        setCurrentUserCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
-        setCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
+        setCurrentUserCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
+        setCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
       }
     })();
   }, []);
