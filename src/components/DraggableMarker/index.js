@@ -7,12 +7,14 @@ import { MapContext } from '../../contexts/MapContext';
 export default function DraggableMarker() {
 
   const { setShowForm } = useContext(FormReportContext);
-  const { setShowDraggableMarker } = useContext(MapContext);
+  const { setShowDraggableMarker, setDraggableMarkerCoords, setDraggableMarkerLocation } = useContext(MapContext);
 
-
-  useEffect(() => {
-    console.log('DraggableMarker')
-  }, [])
+  const handleCancel = () => {
+    setShowForm(true);
+    setShowDraggableMarker(false);
+    setDraggableMarkerCoords(undefined)
+    setDraggableMarkerLocation(undefined)
+  }
 
   const handleConfirmLocation = () => {
     setShowForm(true);
@@ -21,12 +23,17 @@ export default function DraggableMarker() {
 
   return (
     <>
-      <View style={{position: 'absolute', top: '50%', left: '50%'}}>
+      <View style={{position: 'absolute', top: 20, left: 20}}>
+      <TouchableOpacity onPress={handleCancel} style={{backgroundColor: '#000', padding: 16, borderRadius: 5, width: 90, height: 50}}> 
+          <Text style={{textAlign: 'center', fontWeight: '700', width: '100%', color: '#fff'}}>Voltar</Text>
+        </TouchableOpacity >
+      </View>
+      <View style={{position: 'absolute', top: '50%', left: '50%', marginTop: -49, marginLeft: -25}}>
         <Image style={{width: 50, height: 50}} source={require('../../assets/DraggableMarker/marker.jpg')} />
       </View>
-      <View style={{position: 'absolute', bottom: 20, left: 20}}>
-        <TouchableOpacity onPress={handleConfirmLocation}> 
-          <Text>Confirmar local</Text>
+      <View style={{flex: 0, justifyContent: 'center', position: 'absolute', bottom: 20, left: '25%', width: '50%'}}>
+        <TouchableOpacity onPress={handleConfirmLocation} style={{backgroundColor: '#000', padding: 16, borderRadius: 20}}> 
+          <Text style={{textAlign: 'center', fontWeight: '700', width: '100%', color: '#fff'}}>Confirmar local</Text>
         </TouchableOpacity >
       </View>
     </>

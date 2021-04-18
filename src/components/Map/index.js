@@ -46,17 +46,23 @@ export default function Map() {
       
       let gpsServiceStatus = await Location.hasServicesEnabledAsync();
       if (gpsServiceStatus) {
-        
         console.log('STEP 1 -> Permisão de GPS + Coordenadas')
         const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
+        setFirstTime(true);
         setCurrentUserCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
         setCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
-
-        console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
-        socket.emit("userLocation", coords);
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if(coords && firstTime) {
+      console.log(coords)
+      console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
+      socket.emit("userLocation", coords);
+      setFirstTime(false);
+    }
+  }, [coords]);
 
   useEffect(() => {
     if(location) {
@@ -67,7 +73,7 @@ export default function Map() {
   }, [location]);
 
   useEffect(() => {
-    console.log('Setar listeners WS');
+    console.log('ON SOCKET LOAD -> Set Listeners');
     socket.on('userAddress', (data) => {
       setLocation(data)
     })
@@ -78,8 +84,8 @@ export default function Map() {
       console.log('newMarker', data)
       setMarkers(oldMarkers => [...oldMarkers, data]);
     })
-  }, []);
-  
+  }, [socket]);
+    
   useEffect(() => {
     if(!showForm) {
       setCoords(currentUserCoords)
@@ -101,8 +107,8 @@ export default function Map() {
         userInterfaceStyle='dark'
         showsUserLocation={true}
         onRegionChangeComplete={handleRegionChangeComplete}
-        initialRegion={initialRegion}
-        region={coords || initialRegion}
+        initialRegion={coords ? coords : initialRegion}
+        region={coords ? coords : initialRegion}
       >
         {
           markers.length && !showDraggableMarker ? markers.map((marker, index) => (

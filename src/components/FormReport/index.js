@@ -46,7 +46,6 @@ export default function FormReport() {
   }
   
   useEffect(() => {
-    console.log(showForm, draggableMarkerCoords, !draggableMarkerLocation)
     if(showForm && draggableMarkerCoords && !draggableMarkerLocation) {
       setButtonDisabled(true);
       findLocation();

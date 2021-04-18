@@ -16,7 +16,6 @@ export default function WebsocketProvider({children}) {
     });
 
     socket.on("connect", () => {
-      console.log('connected =>', socket.id)
       setSocket(socket);
     });
 
