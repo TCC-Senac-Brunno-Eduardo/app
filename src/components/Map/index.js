@@ -45,48 +45,39 @@ export default function Map() {
       }
       
       let gpsServiceStatus = await Location.hasServicesEnabledAsync();
-      console.log('gpsServiceStatus', gpsServiceStatus)
       if (gpsServiceStatus) {
+        
+        console.log('STEP 1 -> Permisão de GPS + Coordenadas')
         const { coords } = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
         setCurrentUserCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
         setCoords({...coords, latitudeDelta: 0.01, longitudeDelta: 0});
-        console.log('STEP 1 -> Permisão de GPS + Coordenadas')
+
+        console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
+        socket.emit("userLocation", coords);
       }
     })();
   }, []);
 
   useEffect(() => {
-    if(coords && firstTime) {
-      console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
-      socket.emit("userLocation", coords);
-      setFirstTime(false);
-    }
-  }, [coords]);
-
-  useEffect(() => {
-    socket.on('userAddress', (data) => {
-      setLocation(data)
-    })
-  }, []);
-
-  useEffect(() => {
     if(location) {
-      console.log('STEP 3 -> Com a localização completa, vou buscar os marcadores da cidade', location.city)
-      socket.emit('cityMarkers', location.city);
-      socket.on(location.city, (data) => {
-       setMarkers(data)
-      });
+      console.log('STEP 3 -> Com a localização completa, vou buscar me inscrever da cidade', location.city)
+      socket.emit('room', location.city);
+      socket.emit('markerCity', location.city);
     }
   }, [location]);
 
   useEffect(() => {
-    if(location) {
-      console.log('STEP 3 -> Com a localização completa, vou buscar os marcadores da cidade', location.city)
-      socket.emit('cityMarkers', location.city);
-      socket.on(location.city, (data) => {
-       setMarkers(data)
-      });
-    }
+    console.log('Setar listeners WS');
+    socket.on('userAddress', (data) => {
+      setLocation(data)
+    })
+    socket.on('markers', (data) => {
+      setMarkers(data)
+     });
+    socket.on('newMarker', (data) => {
+      console.log('newMarker', data)
+      setMarkers(oldMarkers => [...oldMarkers, data]);
+    })
   }, []);
   
   useEffect(() => {
@@ -94,7 +85,7 @@ export default function Map() {
       setCoords(currentUserCoords)
     }
   }, [showForm]);
-  
+
   if(errorMsg) return (
     <View>
         <Text>{errorMsg}</Text>
