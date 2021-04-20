@@ -13,11 +13,9 @@ import { WebsocketContext } from '../../contexts/WebsocketContext';
 export default function Map() {
 
   const { socket } = useContext(WebsocketContext);
-  const { location, setLocation, coords, setCoords, showDraggableMarker, setDraggableMarkerCoords } = useContext(MapContext);
+  const { location, setLocation, currentUserCoords, setCurrentUserCoords, coords, setCoords, showDraggableMarker, setDraggableMarkerCoords } = useContext(MapContext);
   const { showForm } = useContext(FormReportContext);
-
-  const [ currentUserCoords, setCurrentUserCoords ] = useState();
-  
+    
   const [firstTime, setFirstTime] = useState(true);
   const [markers, setMarkers] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
