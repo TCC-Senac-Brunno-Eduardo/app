@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Button, Text, TouchableOpacity } from 'react-native';
-import { color } from 'react-native-elements/dist/helpers';
+import { View, Text, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { FormReportContext } from '../../contexts/FormReportContext';

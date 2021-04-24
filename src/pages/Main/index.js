@@ -7,6 +7,7 @@ import ButtonCenterUser from '../../components/ButtonCenterUser'
 import ButtonReport from '../../components/ButtonReport' 
 import StatusBar from '../../components/StatusBar' 
 import FormReport from '../../components/FormReport' 
+import LoaderFullScreen from '../../components/LoaderFullScreen' 
 
 import { WebsocketContext } from '../../contexts/WebsocketContext';
 import { MapContext } from '../../contexts/MapContext';
@@ -14,7 +15,7 @@ import { MapContext } from '../../contexts/MapContext';
 export default function Main() {
 
   const { socket } = useContext(WebsocketContext);
-  const { showDraggableMarker } = useContext(MapContext);
+  const { mapViewCoords, showDraggableMarker } = useContext(MapContext);
 
   if(!socket?.id) return null;
 
@@ -27,6 +28,7 @@ export default function Main() {
         {!showDraggableMarker ? <ButtonCenterUser/> : null}
         {!showDraggableMarker ? <SearchPlace/> : null}
         <FormReport />
+        {!mapViewCoords || mapViewCoords?.latitude && !mapViewCoords?.longitude ? <LoaderFullScreen /> : null }
       </Container>
     </SafeArea>
   );

@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
+import LoaderFullScreen from '../LoaderFullScreen';
 import ReportMarker from '../ReportMarker';
 import DraggableMarker from '../DraggableMarker';
 
@@ -93,6 +94,7 @@ export default function Map() {
     </View>
   );
 
+  
   return (
     <>
       <MapView
@@ -101,12 +103,7 @@ export default function Map() {
         provider={PROVIDER_GOOGLE}
         userInterfaceStyle='dark'
         showsUserLocation={true}
-        initialRegion={{
-          latitude: -11.0845284,
-          longitude: -48.4930971,
-          latitudeDelta: 100,
-          longitudeDelta: 100,
-        }}
+        initialRegion={mapViewCoords}
         region={mapViewCoords}
         onRegionChangeComplete={handleRegionChangeComplete}
       >

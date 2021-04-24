@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 import {
   Container,
   ContainerInput,
