@@ -13,80 +13,77 @@ import { WebsocketContext } from '../../contexts/WebsocketContext';
 export default function Map() {
 
   const { socket } = useContext(WebsocketContext);
-  const { location, setLocation, currentUserCoords, setCurrentUserCoords, coords, setCoords, showDraggableMarker, setDraggableMarkerCoords } = useContext(MapContext);
   const { showForm } = useContext(FormReportContext);
-    
-  const [firstTime, setFirstTime] = useState(true);
+  
+  const { 
+    userLocation, setUserLocation, 
+    userCoords, setUserCoords, 
+    mapViewCoords, setMapViewCoords, 
+    showDraggableMarker, setDraggableMarkerCoords 
+  } = useContext(MapContext);
+
   const [markers, setMarkers] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
-
-  const initialRegion = {
-    latitude: -11.0845284,
-    longitude: -48.4930971,
-    latitudeDelta: 100,
-    longitudeDelta: 100,
-  }
-
-  handleRegionChangeComplete = (newCoords) => {
-    if(showDraggableMarker){
-      setDraggableMarkerCoords(newCoords);
-    }
-    setCoords(newCoords);
-  }
-
-  useEffect(() => {
-    (async () => {
+ 
+  const requestPermissionsLocation = async () => {
+    if(await Location.hasServicesEnabledAsync()) {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('O aplicativo não teve acesso ao GPS.');
-        return;
+        return false;
       }
-      
-      let gpsServiceStatus = await Location.hasServicesEnabledAsync();
-      if (gpsServiceStatus) {
-        console.log('STEP 1 -> Permisão de GPS + Coordenadas')
-        let currentPosition = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
-        setFirstTime(true);
-        setCurrentUserCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
-        setCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
-      }
-    })();
+      const currentPosition = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
+      setUserCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
+      setMapViewCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
+    }
+    return false;
+  }
+
+  const handleRegionChangeComplete = (newCoords) => {
+    if(showDraggableMarker){
+      setDraggableMarkerCoords(newCoords);
+    }
+    setMapViewCoords(newCoords);
+  }
+
+  useEffect(() => {
+    requestPermissionsLocation();
   }, []);
 
   useEffect(() => {
-    if(coords && firstTime) {
-      console.log(coords)
+    if(userCoords?.latitude && userCoords?.longitude) {
       console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
-      socket.emit("userLocation", coords);
-      setFirstTime(false);
+      socket.emit("userLocation", userCoords);
     }
-  }, [coords]);
+  }, [userCoords]);
 
   useEffect(() => {
-    if(location) {
-      console.log('STEP 3 -> Com a localização completa, vou buscar me inscrever da cidade', location.city)
-      socket.emit('room', location.city);
-      socket.emit('markerCity', location.city);
+    if(userLocation?.city) {
+      console.log('STEP 3 -> Com a localização completa, vou me inscrever da cidade e buscar marcadores', userLocation.city)
+      socket.emit('room', userLocation.city);
+      socket.emit('markerCity', userLocation.city);
     }
-  }, [location]);
+  }, [userLocation]);
 
   useEffect(() => {
     console.log('ON SOCKET LOAD -> Set Listeners');
     socket.on('userAddress', (data) => {
-      setLocation(data)
+      setUserLocation(data)
     })
     socket.on('markers', (data) => {
       setMarkers(data)
      });
     socket.on('newMarker', (data) => {
-      console.log('newMarker', data)
       setMarkers(oldMarkers => [...oldMarkers, data]);
+    })
+    socket.on('deletedMarker', (markerIds) => {
+      setMarkers((oldMarkers) => oldMarkers.filter(item => { return !markerIds.includes(item.id) }));
     })
   }, [socket]);
     
   useEffect(() => {
     if(!showForm) {
-      setCoords(currentUserCoords)
+      setMapViewCoords(userCoords)
     }
   }, [showForm]);
 
@@ -104,9 +101,14 @@ export default function Map() {
         provider={PROVIDER_GOOGLE}
         userInterfaceStyle='dark'
         showsUserLocation={true}
+        initialRegion={{
+          latitude: -11.0845284,
+          longitude: -48.4930971,
+          latitudeDelta: 100,
+          longitudeDelta: 100,
+        }}
+        region={mapViewCoords}
         onRegionChangeComplete={handleRegionChangeComplete}
-        initialRegion={coords ? coords : initialRegion}
-        region={coords ? coords : initialRegion}
       >
         {
           markers.length && !showDraggableMarker ? markers.map((marker, index) => (

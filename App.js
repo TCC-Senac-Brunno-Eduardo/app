@@ -13,10 +13,6 @@ export default function App() {
     }
   }
 
-  useEffect(() => {
-    console.log('useEffect => App')
-  }, [])
-
   return (
     <>
       <WebsocketProvider>

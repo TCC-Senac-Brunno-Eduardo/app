@@ -79,4 +79,21 @@ export const EditAddressContainer = styled.View`
 export const ContainerButtons = styled.View`
   flex-direction: row;
   justify-content: space-around;
+  margin-top: 20px;
+`;
+
+export const ButtonCancel = styled.TouchableOpacity`
+  background: #FF0000;
+  padding: 12px 24px;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+`;
+
+export const ButtonSubmit = styled.TouchableOpacity`
+  background: #00a830;
+  padding: 12px 24px;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 `;

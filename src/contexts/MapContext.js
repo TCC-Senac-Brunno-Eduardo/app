@@ -4,19 +4,19 @@ export const MapContext = createContext();
 
 export default function MapProvider({children}) {
 
-  const [location, setLocation] = useState(undefined);  
-  const [coords, setCoords] = useState(undefined);  
-  const [currentUserCoords, setCurrentUserCoords] = useState(undefined);
-
+  const [userLocation, setUserLocation] = useState(undefined);  
+  const [userCoords, setUserCoords]  = useState(undefined);  
+  const [mapViewCoords, setMapViewCoords] = useState(undefined);  
+  
   const [showDraggableMarker, setShowDraggableMarker] = useState(false);  
   const [draggableMarkerCoords, setDraggableMarkerCoords] = useState(undefined);
   const [draggableMarkerLocation, setDraggableMarkerLocation] = useState(undefined);
     
   return (
     <MapContext.Provider value={{
-      location, setLocation, 
-      coords, setCoords,
-      currentUserCoords, setCurrentUserCoords,
+      userLocation, setUserLocation, 
+      userCoords, setUserCoords,
+      mapViewCoords, setMapViewCoords,
       showDraggableMarker, setShowDraggableMarker,
       draggableMarkerCoords, setDraggableMarkerCoords,
       draggableMarkerLocation, setDraggableMarkerLocation,

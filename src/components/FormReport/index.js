@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { View, Button, Text, TouchableOpacity } from 'react-native';
+import { color } from 'react-native-elements/dist/helpers';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { FormReportContext } from '../../contexts/FormReportContext';
@@ -21,12 +22,22 @@ import {
   ViewAddressContainer,
   EditAddressContainer,
   ContainerButtons,
+  ButtonCancel,
+  ButtonSubmit
 } from './styles';
 
 export default function FormReport() {
 
   const { showForm, setShowForm } = useContext(FormReportContext);
-  const { coords, location, setShowDraggableMarker, draggableMarkerCoords, draggableMarkerLocation, setDraggableMarkerLocation, setDraggableMarkerCoords } = useContext(MapContext);
+  const { 
+    userCoords, 
+    userLocation, 
+    setShowDraggableMarker, 
+    draggableMarkerCoords, 
+    draggableMarkerLocation, 
+    setDraggableMarkerLocation, 
+    setDraggableMarkerCoords 
+  } = useContext(MapContext);
 
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const [title, setTitle] = useState(null);
@@ -57,6 +68,8 @@ export default function FormReport() {
   const handleCloseForm = async (e) => {
     setTitle(null);
     setDescription(null);
+    setTitleError(null);
+    setDescriptionError(null);
     setButtonDisabled(false);
     setShowForm(false);
     setDraggableMarkerLocation(undefined);
@@ -80,9 +93,9 @@ export default function FormReport() {
     }
     setDescriptionError(null);
 
-    const latitude = draggableMarkerCoords?.latitude || coords.latitude;
-    const longitude = draggableMarkerCoords?.longitude || coords.longitude;
-    const city = draggableMarkerLocation?.city || location.city
+    const latitude = draggableMarkerCoords?.latitude || userCoords.latitude;
+    const longitude = draggableMarkerCoords?.longitude || userCoords.longitude;
+    const city = draggableMarkerLocation?.city || userLocation.city
 
     const marker = await insertMarker(latitude, longitude, city, title, description);
     if(marker) {
@@ -148,8 +161,8 @@ export default function FormReport() {
             <View style={{ flex: 0.9, padding: 4 }}>
               <Text selectable style={{ textAlign: 'center' }}>
                 {
-                  !draggableMarkerCoords && location ?
-                    location.full_address
+                  !draggableMarkerCoords && userLocation ?
+                    userLocation.full_address
                   : 
                   draggableMarkerCoords && !draggableMarkerLocation ?
                     'Carregando...'
@@ -176,8 +189,12 @@ export default function FormReport() {
         </ContainerAddress>
 
         <ContainerButtons>
-          <Button color='#FF0000' accessibilityLabel="Cancelar" title="Cancelar" onPress={handleCloseForm} />
-          <Button color='#00a830' disabled={isButtonDisabled} accessibilityLabel="Reportar" title="Reportar" onPress={handleSubmit} />
+          <ButtonCancel onPress={handleCloseForm}>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }} accessibilityLabel="Cancelar Report" accessibilityHint="Cancelar Report">Cancelar</Text>
+          </ButtonCancel>
+          <ButtonSubmit onPress={handleSubmit} disabled={isButtonDisabled}>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }} accessibilityLabel="Enviar Report" accessibilityHint="Enviar Report">Reportar</Text>
+          </ButtonSubmit>
         </ContainerButtons>
 
       </Container>

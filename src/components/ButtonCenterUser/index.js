@@ -8,9 +8,9 @@ import { MapContext } from '../../contexts/MapContext';
 
 export default function ButtonCenterUser() {
 
-  const { currentUserCoords, setCoords } = useContext(MapContext);
+  const { userCoords, setMapViewCoords } = useContext(MapContext);
 
-  const handleCenter = () => setCoords(currentUserCoords);
+  const handleCenter = () => setMapViewCoords(userCoords);
 
   return (
     <Container>

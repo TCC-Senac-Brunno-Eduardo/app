@@ -23,8 +23,8 @@ export default function DraggableMarker() {
 
   return (
     <>
-      <View style={{position: 'absolute', top: 20, left: 20}}>
-      <TouchableOpacity onPress={handleCancel} style={{backgroundColor: '#000', padding: 16, borderRadius: 5, width: 90, height: 50}}> 
+      <View style={{position: 'absolute', top: 40, left: 20}}>
+        <TouchableOpacity onPress={handleCancel} style={{backgroundColor: '#000', padding: 16, borderRadius: 5, width: 90, height: 50}}> 
           <Text style={{textAlign: 'center', fontWeight: '700', width: '100%', color: '#fff'}}>Voltar</Text>
         </TouchableOpacity >
       </View>
@@ -32,7 +32,7 @@ export default function DraggableMarker() {
         <Image style={{width: 50, height: 50}} source={require('../../assets/DraggableMarker/marker.jpg')} />
       </View>
       <View style={{flex: 0, justifyContent: 'center', position: 'absolute', bottom: 20, left: '25%', width: '50%'}}>
-        <TouchableOpacity onPress={handleConfirmLocation} style={{backgroundColor: '#000', padding: 16, borderRadius: 20}}> 
+        <TouchableOpacity onPress={handleConfirmLocation} style={{backgroundColor: '#000', padding: 16, borderRadius: 5}}> 
           <Text style={{textAlign: 'center', fontWeight: '700', width: '100%', color: '#fff'}}>Confirmar local</Text>
         </TouchableOpacity >
       </View>
