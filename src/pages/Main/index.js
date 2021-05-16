@@ -16,7 +16,7 @@ export default function Main() {
 
   const { socket } = useContext(WebsocketContext);
   const { mapViewCoords, showDraggableMarker } = useContext(MapContext);
-
+  
   if(!socket?.id) return null;
 
   return (

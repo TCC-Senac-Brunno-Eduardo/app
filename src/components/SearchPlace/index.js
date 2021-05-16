@@ -10,13 +10,10 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { GOOGLE_API_KEY } from '@env';
 import { MapContext } from '../../contexts/MapContext';
 
-
-
 export default function SearchPlace() {
   const refInput = useRef();
 
   const { userCoords, setMapViewCoords } = useContext(MapContext);
-  
 
   const handlePlace = (data, details) => {
     setMapViewCoords({latitude: details.geometry.location.lat, longitude: details.geometry.location.lng, latitudeDelta: 0.01, longitudeDelta: 0});
