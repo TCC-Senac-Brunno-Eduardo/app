@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import ReportMarker from '../ReportMarker';
+import HeatMarkers from '../HeatMarkers';
 import DraggableMarker from '../DraggableMarker';
 
 import { FormReportContext } from '../../contexts/FormReportContext';
@@ -14,35 +15,36 @@ export default function Map() {
 
   const { socket } = useContext(WebsocketContext);
   const { showForm } = useContext(FormReportContext);
-  
-  const { 
-    userLocation, setUserLocation, 
-    userCoords, setUserCoords, 
-    mapViewCoords, setMapViewCoords, 
-    showDraggableMarker, setDraggableMarkerCoords ,
+
+  const {
+    userLocation, setUserLocation,
+    userCoords, setUserCoords,
+    mapViewCoords, setMapViewCoords,
+    showDraggableMarker, setDraggableMarkerCoords,
     setShowMarkerInfo,
-    setMarkerInfoData
+    setMarkerInfoData,
+    showHeatMap
   } = useContext(MapContext);
 
   const [markers, setMarkers] = useState([]);
   const [errorMsg, setErrorMsg] = useState(null);
- 
+
   const requestPermissionsLocation = async () => {
-    if(await Location.hasServicesEnabledAsync()) {
+    if (await Location.hasServicesEnabledAsync()) {
       let { status } = await Location.requestPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('O aplicativo não teve acesso ao GPS.');
         return false;
       }
       const currentPosition = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High })
-      setUserCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
-      setMapViewCoords({...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0});
+      setUserCoords({ ...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0 });
+      setMapViewCoords({ ...currentPosition.coords, latitudeDelta: 0.01, longitudeDelta: 0 });
     }
     return false;
   }
 
   const handleRegionChangeComplete = (newCoords) => {
-    if(showDraggableMarker){
+    if (showDraggableMarker) {
       setDraggableMarkerCoords(newCoords);
     }
     setMapViewCoords(newCoords);
@@ -58,14 +60,14 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-    if(userCoords?.latitude && userCoords?.longitude) {
+    if (userCoords?.latitude && userCoords?.longitude) {
       console.log('STEP 2 -> Com as coordenadas, vou buscar no servidor a localização completa')
       socket.emit("userLocation", userCoords);
     }
   }, [userCoords]);
 
   useEffect(() => {
-    if(userLocation?.city) {
+    if (userLocation?.city) {
       console.log('STEP 3 -> Com a localização completa, vou me inscrever da cidade e buscar marcadores', userLocation.city)
       socket.emit('room', userLocation.city);
       socket.emit('markerCity', userLocation.city);
@@ -79,7 +81,7 @@ export default function Map() {
     })
     socket.on('markers', (data) => {
       setMarkers(data)
-     });
+    });
     socket.on('newMarker', (data) => {
       setMarkers(oldMarkers => [...oldMarkers, data]);
     })
@@ -87,20 +89,20 @@ export default function Map() {
       setMarkers((oldMarkers) => oldMarkers.filter(item => { return !markerIds.includes(item.id) }));
     })
   }, [socket]);
-    
+
   useEffect(() => {
-    if(!showForm) {
+    if (!showForm) {
       setMapViewCoords(userCoords)
     }
   }, [showForm]);
 
-  if(errorMsg) return (
+  if (errorMsg) return (
     <View>
-        <Text>{errorMsg}</Text>
+      <Text>{errorMsg}</Text>
     </View>
   );
 
-  
+
   return (
     <>
       <MapView
@@ -114,9 +116,9 @@ export default function Map() {
         onRegionChangeComplete={handleRegionChangeComplete}
       >
         {
-          markers.length && !showDraggableMarker ? markers.map((marker, index) => (
-            <ReportMarker 
-              key={index} 
+          !showHeatMap && markers.length && !showDraggableMarker ? markers.map((marker, index) => (
+            <ReportMarker
+              key={index}
               coordinate={{
                 latitude: marker.latitude,
                 longitude: marker.longitude
@@ -126,8 +128,11 @@ export default function Map() {
             />
           )) : null
         }
+        {
+          showHeatMap && markers.length && !showDraggableMarker ? (<HeatMarkers data={markers} />) : null
+        }
       </MapView>
-      { showDraggableMarker ? <DraggableMarker/> : null }
+      { showDraggableMarker ? <DraggableMarker /> : null}
     </>
   );
 }

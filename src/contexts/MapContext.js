@@ -12,6 +12,7 @@ export default function MapProvider({children}) {
   const [draggableMarkerCoords, setDraggableMarkerCoords] = useState(undefined);
   const [draggableMarkerLocation, setDraggableMarkerLocation] = useState(undefined);
   
+  const [showHeatMap, setShowHeatMap] = useState(false);
   const [showMarkerInfo, setShowMarkerInfo] = useState(false);
   const [markerInfoData, setMarkerInfoData] = useState(undefined);
 
@@ -25,6 +26,7 @@ export default function MapProvider({children}) {
       draggableMarkerLocation, setDraggableMarkerLocation,
       showMarkerInfo, setShowMarkerInfo,
       markerInfoData, setMarkerInfoData,
+      showHeatMap, setShowHeatMap,
     }}>
       {children}
     </MapContext.Provider>

@@ -3,6 +3,7 @@ import { SafeArea, Container } from './styles'
 
 import Map from '../../components/Map'
 import SearchPlace from '../../components/SearchPlace'
+import ButttonMapVisualization from '../../components/ButttonMapVisualization' 
 import ButtonCenterUser from '../../components/ButtonCenterUser' 
 import ButtonReport from '../../components/ButtonReport' 
 import StatusBar from '../../components/StatusBar' 
@@ -25,6 +26,7 @@ export default function Main() {
       <Container>
         <StatusBar />
         <Map />
+        {!showDraggableMarker && !showMarkerInfo ? <ButttonMapVisualization/> : null}
         {!showDraggableMarker && !showMarkerInfo ? <ButtonReport/> : null}
         {!showDraggableMarker && !showMarkerInfo ? <ButtonCenterUser/> : null}
         {!showDraggableMarker && !showMarkerInfo ? <SearchPlace/> : null}
