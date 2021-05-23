@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
-import LoaderFullScreen from '../LoaderFullScreen';
 import ReportMarker from '../ReportMarker';
 import DraggableMarker from '../DraggableMarker';
 
@@ -20,7 +19,9 @@ export default function Map() {
     userLocation, setUserLocation, 
     userCoords, setUserCoords, 
     mapViewCoords, setMapViewCoords, 
-    showDraggableMarker, setDraggableMarkerCoords 
+    showDraggableMarker, setDraggableMarkerCoords ,
+    setShowMarkerInfo,
+    setMarkerInfoData
   } = useContext(MapContext);
 
   const [markers, setMarkers] = useState([]);
@@ -45,6 +46,11 @@ export default function Map() {
       setDraggableMarkerCoords(newCoords);
     }
     setMapViewCoords(newCoords);
+  }
+
+  const handleMarkerInfo = (data) => {
+    setShowMarkerInfo(true)
+    setMarkerInfoData(data)
   }
 
   useEffect(() => {
@@ -115,6 +121,8 @@ export default function Map() {
                 latitude: marker.latitude,
                 longitude: marker.longitude
               }}
+              data={marker}
+              onPress={handleMarkerInfo}
             />
           )) : null
         }

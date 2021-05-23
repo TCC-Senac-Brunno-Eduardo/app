@@ -1,25 +1,17 @@
 import React, { useContext, useEffect } from 'react';
-import { SafeArea, Container } from './styles'
-import { Text, View, Button } from 'react-native'
+import { SafeArea, Container, Text, Titulo, BotaoAcao, TextoBotao } from './styles'
 
 export default function Welcome({ navigation }) {
+
   return (
     <SafeArea>
-      <Container>
-        <Text>Bem-vindo ao Onde Não Ir!</Text>
-        <Text>Mussum Ipsum, cacilds vidis litro abertis. Suco de cevadiss deixa as pessoas mais interessantis. Quem num gosta di mé, boa gentis num é. Si num tem leite então bota uma pinga aí cumpadi! Atirei o pau no gatis, per gatis num morreus.</Text>
-        <Text>Tá deprimidis, eu conheço uma cachacis que pode alegrar sua vidis. Praesent malesuada urna nisi, quis volutpat erat hendrerit non. Nam vulputate dapibus. Interessantiss quisso pudia ce receita de bolis, mais bolis eu num gostis. A ordem dos tratores não altera o pão duris.</Text>
-        <Button title='Avançar' />
-      </Container>
-      <Container>
-        <Text>Pedi permissao aqui</Text>
-        <Text>Mussum Ipsum, cacilds vidis litro abertis. Suco de cevadiss deixa as pessoas mais interessantis. Quem num gosta di mé, boa gentis num é. Si num tem leite então bota uma pinga aí cumpadi! Atirei o pau no gatis, per gatis num morreus.</Text>
-        <Button title='Clique aqui' />
-      </Container>
-      <Container>
-        <Text>Aproveite!</Text>
-        <Text>Mussum Ipsum, cacilds vidis litro abertis. Suco de cevadiss deixa as pessoas mais interessantis. Quem num gosta di mé, boa gentis num é. Si num tem leite então bota uma pinga aí cumpadi! Atirei o pau no gatis, per gatis num morreus.</Text>
-        <Button title='Comecar' onPress={() => navigation.navigate('Main')} />
+      <Container >
+        <Titulo>Bem-vindo ao Onde Não Ir!</Titulo>
+        <Text>O aplicativo tem foco em apresentar pontos de aglomeração na sua cidade</Text>
+        <Text style={{ fontWeight: '700'}}>Contribua e comaprtilhe</Text>
+        <BotaoAcao onPress={() => navigation.navigate('Permission')}>
+          <TextoBotao>Avançar</TextoBotao>
+        </BotaoAcao>
       </Container>
     </SafeArea>
   );

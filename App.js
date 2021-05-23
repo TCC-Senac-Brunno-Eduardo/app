@@ -7,6 +7,7 @@ import WebsocketProvider from './src/contexts/WebsocketContext';
 
 import Main from './src/pages/Main'
 import Welcome from './src/pages/Welcome';
+import Permission from './src/pages/Permission';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -36,6 +37,7 @@ export default function App() {
                   cardOverlayEnabled: true
                 })}>
                 <Stack.Screen headerShown={false} name="Welcome" component={Welcome} />
+                <Stack.Screen name="Permission" component={Permission} />
                 <Stack.Screen name="Main" component={Main} />
               </Stack.Navigator>
             </NavigationContainer>

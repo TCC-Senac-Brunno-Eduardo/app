@@ -8,6 +8,7 @@ import ButtonReport from '../../components/ButtonReport'
 import StatusBar from '../../components/StatusBar' 
 import FormReport from '../../components/FormReport' 
 import LoaderFullScreen from '../../components/LoaderFullScreen' 
+import MarkerInfo from '../../components/MarkerInfo' 
 
 import { WebsocketContext } from '../../contexts/WebsocketContext';
 import { MapContext } from '../../contexts/MapContext';
@@ -15,7 +16,7 @@ import { MapContext } from '../../contexts/MapContext';
 export default function Main() {
 
   const { socket } = useContext(WebsocketContext);
-  const { mapViewCoords, showDraggableMarker } = useContext(MapContext);
+  const { mapViewCoords, showDraggableMarker, showMarkerInfo, markerInfoData } = useContext(MapContext);
   
   if(!socket?.id) return null;
 
@@ -24,11 +25,12 @@ export default function Main() {
       <Container>
         <StatusBar />
         <Map />
-        {!showDraggableMarker ? <ButtonReport/> : null}
-        {!showDraggableMarker ? <ButtonCenterUser/> : null}
-        {!showDraggableMarker ? <SearchPlace/> : null}
+        {!showDraggableMarker && !showMarkerInfo ? <ButtonReport/> : null}
+        {!showDraggableMarker && !showMarkerInfo ? <ButtonCenterUser/> : null}
+        {!showDraggableMarker && !showMarkerInfo ? <SearchPlace/> : null}
         <FormReport />
         {!mapViewCoords || mapViewCoords?.latitude && !mapViewCoords?.longitude ? <LoaderFullScreen /> : null }
+        { showMarkerInfo && markerInfoData?.id ? <MarkerInfo show={showMarkerInfo} data={markerInfoData}/> : null }
       </Container>
     </SafeArea>
   );

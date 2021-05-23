@@ -1,13 +1,18 @@
 import React from 'react';
-import  { Marker } from 'react-native-maps';
+import  { Marker, Callout } from 'react-native-maps';
+import { View, Text } from 'react-native'
 
 
 export default function ReportMarker(props) {
 
-  const { coordinate, title } = props
+  const { coordinate, data, onPress } = props
+
+  const handlePress = (data) => {
+    onPress(data)
+  }
 
   return (
-    <Marker coordinate={coordinate}></Marker>
+    <Marker onPress={() => handlePress(data)} coordinate={coordinate}></Marker>
   );
 }
 
