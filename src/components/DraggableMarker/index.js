@@ -29,7 +29,7 @@ export default function DraggableMarker() {
         </TouchableOpacity >
       </View>
       <View style={{position: 'absolute', top: '50%', left: '50%', marginTop: -49, marginLeft: -25}}>
-        <Image style={{width: 50, height: 50}} source={require('../../assets/DraggableMarker/marker.jpg')} />
+        <Image style={{width: 50, height: 50}} source={require('../../assets/DraggableMarker/marker.png')} />
       </View>
       <View style={{flex: 0, justifyContent: 'center', position: 'absolute', bottom: 20, left: '25%', width: '50%'}}>
         <TouchableOpacity onPress={handleConfirmLocation} style={{backgroundColor: '#000', padding: 16, borderRadius: 5}}> 

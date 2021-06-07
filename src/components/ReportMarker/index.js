@@ -10,7 +10,7 @@ export default function ReportMarker(props) {
   }
 
   return (
-    <Marker onPress={() => handlePress(data)} coordinate={coordinate}></Marker>
+    <Marker onPress={() => handlePress(data)} image={require('../../assets/marker.png')}  coordinate={coordinate}></Marker>
   );
 }
 
