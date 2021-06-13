@@ -25,8 +25,49 @@ export const insertMarker = async (latitude, longitude, city, title, description
 export const reverseGeocoding = async (latitude, longitude) => {
   try {
     const { data } = await axios.get(`${API_BFF_HOST}/v1/app/reverse-geocoding/?lat=${latitude}&lng=${longitude}`);
-    console.log(data)
     return data
+  } catch (error) {
+    console.log(error.response.status)
+    console.log(error.response.data)
+    return false
+  }
+}
+
+export const dislikeService = async (id) => {
+  try {
+    const request = await axios.post(`${API_SERVICE_HOST}/v1/app/marker-report/dislike`,
+    {
+      id
+    });
+    return true
+  } catch (error) {
+    console.log(error.response.status)
+    console.log(error.response.data)
+    return false
+  }
+}
+
+export const likeService = async (id) => {
+  try {
+    const request = await axios.post(`${API_SERVICE_HOST}/v1/app/marker-report/like`,
+    {
+      id
+    });
+    return true
+  } catch (error) {
+    console.log(error.response.status)
+    console.log(error.response.data)
+    return false
+  }
+}
+
+export const strikeService = async (id) => {
+  try {
+    const request = await axios.post(`${API_SERVICE_HOST}/v1/app/marker-report/strike`,
+    {
+      id
+    });
+    return true
   } catch (error) {
     console.log(error.response.status)
     console.log(error.response.data)
