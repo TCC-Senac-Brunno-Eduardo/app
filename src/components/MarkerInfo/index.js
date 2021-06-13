@@ -30,35 +30,26 @@ export default function MarkerInfo({show, data}) {
 
   const { showMarkerInfo, setShowMarkerInfo } = useContext(MapContext);
 
-  const calcularTempoReport = (d) => {
-
+  const formatarData = (d) => {
     const date = moment(d);
-    const now = moment(new Date());
-
-    const diffHours = now.diff(date, 'hours')
-    if(diffHours != 0) {
-      return `${diffHours} horas`
-    }
-
-    const diffMin = now.diff(date, 'minutes')
-    return `${diffMin} minutos`
+    return `${String(date.date()).padStart(2, '0')}/${String(date.month() + 1).padStart(2, '0')} às ${String(date.hour()).padStart(2, '0')}:${(String(date.minute()).padStart(2, '0'))}`
   }
 
-  const handleLike = async () => {
+  const handleLike = async (id) => {
     if(disabledButton) return;
-    await likeService(data.id);
+    const response = await likeService(id);
     setCurrentButtonLike(buttonsName['like']['solid']);
     setDisabledButton(true)
   }
   
-  const handleDislike = async () => {
+  const handleDislike = async (id) => {
     if(disabledButton) return;
-    await dislikeService(data.id);
+    const response = await dislikeService(id);
     setCurrentButtonDislike(buttonsName['dislike']['solid']);
     setDisabledButton(true)
   }
 
-  const handleStrike = async () => Alert.alert(
+  const handleStrike = async (id) => Alert.alert(
     "Denuncia de ponto irregular",
     "Você confirma que esse ponto está em desacordo com a realidade e/ou objetivo do aplicativo?",
     [
@@ -67,7 +58,7 @@ export default function MarkerInfo({show, data}) {
         style: "cancel"
       },
       { text: "Confimar", onPress: async () => {
-        await strikeService(data.id);
+        const response = await strikeService(id);
         Alert.alert("Feedback enviado!","Obrigado!")
       } }
     ]
@@ -84,18 +75,18 @@ export default function MarkerInfo({show, data}) {
         <Text style={{ fontSize: 22, fontWeight: '700', marginBottom: 5 }}>{data.title}</Text>
         <Text style={{ marginBottom: 5 }}>{data.description}</Text>
         <Text>{data.city}</Text>
-        <Text>Reportado há {calcularTempoReport(data.dateTimeReport)}</Text>
+        <Text>Reportado em {formatarData(data.dateTimeReport)}</Text>
       </View>
       <View style={{ paddingTop: 16, flex: 0, flexDirection: 'row', flexWrap: 'nowrap', justifyContent: 'flex-start', alignItems: 'center' }}>
         <View style={{flex: 0, flexDirection: 'row', alignItems: 'center', marginRight: 20}}>
           <Text style={{ marginRight: 5 }}>{data.iteration?.like}</Text>
-          <TouchableOpacity disable={disabledButton}  onPress={ (e) => { handleLike() } }>
+          <TouchableOpacity disable={disabledButton}  onPress={ (e) => { handleLike(data.id) } }>
             <MaterialCommunityIcons name={currentButtonLike} size={28} color="black" type="solid" titleProps={{accessibilityHint: 'Like', accessibilityLabel:"Like", accessible:"true" }}/>
           </TouchableOpacity>
         </View>
         <View style={{flex: 0, flexDirection: 'row', alignItems: 'center'}}>
           <Text style={{ marginRight: 5 }}>{data.iteration?.dislike}</Text>
-          <TouchableOpacity  disable={disabledButton}onPress={ (e) => { handleDislike() } }>
+          <TouchableOpacity  disable={disabledButton}onPress={ (e) => { handleDislike(data.id) } }>
             <MaterialCommunityIcons name={currentButtonDilike} size={28} color="black" type="solid" titleProps={{accessibilityHint: 'Dislike', accessibilityLabel:"Dislike", accessible:"true" }}/>
           </TouchableOpacity>
         </View>
@@ -103,7 +94,7 @@ export default function MarkerInfo({show, data}) {
 
       <View style={{ paddingTop: 24 }}>
         <View style={{flex: 0, flexDirection: 'row', alignItems: 'center'}}>
-          <TouchableOpacity style={{flex: 0, flexDirection: 'row', alignItems: 'center'}} onPress={ (e) => { handleStrike() } }>
+          <TouchableOpacity style={{flex: 0, flexDirection: 'row', alignItems: 'center'}} onPress={ (e) => { handleStrike(data.id) } }>
             <MaterialCommunityIcons name="flag" size={28} color="black" type="solid" titleProps={{accessibilityHint: 'Dislike', accessibilityLabel:"Dislike", accessible:"true" }}/>
             <Text style={{ marginLeft: 5 }}>Denunciar esse ponto</Text>
           </TouchableOpacity>
