@@ -64,6 +64,12 @@ export default function MarkerInfo({show, data}) {
     ]
   );
 
+  useEffect(() => {
+    setCurrentButtonLike(buttonsName['like']['outline'])
+    setCurrentButtonDislike(buttonsName['dislike']['outline'])
+    setDisabledButton(false)
+  }, [data]);
+
   return (
     <View style={{position: 'absolute', bottom: 0, left: 0, backgroundColor: '#fff', width: '100%', padding: 16}}>
       <View style={{position: 'absolute', top: 0, right: 0}}>

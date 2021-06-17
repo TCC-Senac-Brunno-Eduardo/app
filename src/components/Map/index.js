@@ -86,15 +86,12 @@ export default function Map() {
       setMarkers(oldMarkers => [...oldMarkers, data]);
     })
     socket.on('updateMarker', (data) => {
-      const oldMarkers = markers;
-      let index = oldMarkers.findIndex(m => data.id == m.id);
-      console.log(index)
-      if(index < 0) {
-        index = oldMarkers.length;
-      };
-      console.log(index)
-      oldMarkers[index] = data;
-      setMarkers(oldMarkers)
+      setMarkers(oldMarkers => oldMarkers.map((m) => {
+        if(m.id === data.id) {
+          return data
+        } 
+        return m
+      }))
       setMarkerInfoData(data)
     })
     socket.on('deletedMarker', (markerIds) => {
